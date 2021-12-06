@@ -1,3 +1,12 @@
+CREATE USER gis_server WITH PASSWORD '1b44mgfzl8i1nhxl94x5';
+CREATE USER gis_basic WITH PASSWORD '897jiqi4eqnttbfspqco';
+ALTER USER gis_server SUPERUSER;
+ALTER USER gis_basic SUPERUSER;
+GRANT UPDATE ON project TO gis_server;
+GRANT UPDATE ON project TO gis_basic;
+
+
+
 CREATE TABLE "student" (
   "id" SERIAL PRIMARY KEY,
   "username" varchar(30) UNIQUE NOT NULL,

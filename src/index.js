@@ -2,28 +2,40 @@ const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
 const fs = require("fs");
-
+const { Client } = require('pg');
 
 const app = express();
 const port = 8080;
 
 app.set("view engine", "hbs");
-
 app.set("views", path.join(__dirname, "../templates/views"));
 app.use(express.static(path.join(__dirname, "../public")));
 hbs.registerPartials(path.join(__dirname, "../templates/componets"));
 
+const args = process.argv.slice(2);
+let credentials = { user: "postgres", password: null };
+
+for (let i = 0; i < args.length - 1; i++) {
+    if (args[i] == "-u" || args[i] == "--user")
+        credentials.user = args[i + 1];
+    if (args[i] == "-p" || args[i] == "--password")
+        credentials.password = args[i + 1];
+}
+const client = new Client({
+    user: credentials.user,
+    host: 'localhost',
+    database: 'project',
+    password: credentials.password,
+    port: 5432,
+});
+client.connect();
+
 
 app.get("/", (req, res) => {
-    res.render("index", { title: "Index Page", name: "How", function: counter() });
+    res.send(client.database + " " + client.user);
+    //res.render("index", { title: "Index Page", name: "How", function: counter() });
 
 });
-
-let num = 0;
-function counter() {
-    num += 1;
-    return num;
-}
 
 app.get("/weather", (req, res) => {
     const location = req.query.location !== 'undefined' ? req.query.location : "Istanbul";
