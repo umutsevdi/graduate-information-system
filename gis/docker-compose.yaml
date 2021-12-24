@@ -1,0 +1,37 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=grad
+ 
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 3000:8080
+
+volumes:
+  pgdata:
+  # App backend service
+  #server:
+  #  build:
+  #    dockerfile: Dockerfile
+  #  volumes:
+  #    - file_storage_volume:/app/storage
+  #  ports:
+  #    - "8080:8080"
+  #  restart: always
+  #  depends_on: 
+  #    - postgres 
+  #  networks:
+  #    - dbnet
