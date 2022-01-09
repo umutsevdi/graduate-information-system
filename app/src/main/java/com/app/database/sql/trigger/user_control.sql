@@ -8,7 +8,7 @@ create or replace function createUserControl()
 $body$
 begin
     if (
-                new.gender not in ('M', 'F', 'O') or
+                new.gender not in ('Male', 'Female', 'Other') or
                 date_gt(new.dob, current_date) or
                 date_gt(new.g_year, current_date) or
                 new.profession not in (select profession_name from university) or

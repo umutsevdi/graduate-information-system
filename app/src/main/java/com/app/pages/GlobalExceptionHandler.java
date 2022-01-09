@@ -1,4 +1,4 @@
-package com.app.handlers;
+package com.app.pages;
 
 
 import org.springframework.http.HttpStatus;

@@ -26,7 +26,7 @@ CREATE TABLE "user"
     "mail"       varchar(60) UNIQUE NOT NULL,
     "phone"      varchar(15) UNIQUE NOT NULL,
     "password"   varchar(30)        NOT NULL,
-    "gender"     char(1)            NOT NULL,         -- enum : male female other
+    "gender"     varchar(15)            NOT NULL,         -- enum : male female other
     "dob"        date               NOT NULL,
     "created_at" timestamp DEFAULT clock_timestamp(), -- automatically initialized
     -- "faculty" varchar(40) NOT NULL,

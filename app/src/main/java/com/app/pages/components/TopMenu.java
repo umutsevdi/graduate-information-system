@@ -21,11 +21,11 @@ public class TopMenu extends HorizontalLayout {
         schoolIcon.setMaxHeight("24px");
         MenuBar menuBar = new MenuBar();
         menuBar.addItem("Home");
-        menuBar.addItem(new RouterLink("Home", MainPage.class));
         Accordion profileMenubar = new Accordion();
-        profileMenubar.add("Profile", profileMenubar);
-        profileMenubar.add("Edit Profile", profileMenubar);
-        profileMenubar.add("Logout", profileMenubar);
+
+        profileMenubar.add("Profile", new Button());
+        profileMenubar.add("Edit Profile", new Button());
+        profileMenubar.add("Logout", new Button());
         menuBar.addItem(profileMenubar);
         HorizontalLayout searchBox = new HorizontalLayout();
         TextField searchField = new TextField();

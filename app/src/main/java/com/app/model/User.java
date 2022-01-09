@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +20,8 @@ public class User {
     private String mail;
     private String phone;
     private String password;
-    private char gender;
-    private LocalDate dob;
+    private String gender;
+    private Date dob;
     private Timestamp createdAt;
 
     private String profession;

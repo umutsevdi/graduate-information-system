@@ -15,7 +15,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Getter
 public class AuthenticationService {
-    private HashMap<String, LocalDateTime> sessions;
+    private HashMap<String, UserSession> sessions;
     private DBConfig db;
 
     public void register(RegisterRequest request) throws Exception {
@@ -46,13 +46,14 @@ public class AuthenticationService {
 
         Statement statement = db.getInstance().createStatement();
         ResultSet result = statement.executeQuery(
-                "SELECT * FROM \"user\" WHERE \"user\".mail='" + mail+"'");
+                "SELECT * FROM \"user\" WHERE \"user\".mail='" + mail + "'");
         while (result.next()) {
             if (result.getString("password").equals(password)) {
                 String token = java.util.UUID.randomUUID().toString();
-                sessions.put(
-                        token, LocalDateTime.now()
-                );
+                UserSession session = new UserSession(
+                        result.getString("mail"), LocalDateTime.now());
+                sessions.put(token, session);
+                System.out.println("@createSession : " + session);
                 return token;
             }
         }
@@ -61,9 +62,10 @@ public class AuthenticationService {
 
     public Boolean validate(String token) {
         if (sessions.get(token) != null) {
-            return sessions.get(token).plusDays(1).isAfter(LocalDateTime.now());
+            return sessions.get(token).getTime().plusDays(1).isAfter(LocalDateTime.now());
         }
         return false;
     }
 
 }
+
