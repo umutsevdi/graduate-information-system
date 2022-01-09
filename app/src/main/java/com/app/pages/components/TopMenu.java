@@ -1,6 +1,6 @@
-package com.app.controller.components;
+package com.app.pages.components;
 
-import com.app.controller.MainPage;
+import com.app.pages.MainPage;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
@@ -12,8 +12,6 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.RouterLink;
-
-import java.awt.*;
 
 
 public class TopMenu extends HorizontalLayout {

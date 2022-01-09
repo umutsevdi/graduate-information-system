@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,17 +23,39 @@ public class User {
     private String password;
     private char gender;
     private LocalDate dob;
-    private Long registered;
+    private Timestamp createdAt;
 
-    private String job;
+    private String profession;
+    private Date graduationYear;
     private String company;
 
-    private List<String> languages;
     private Boolean openToWork;
-    private List<String> skills;
-    private String faculty;
-    private String profession;
-    private int graduationYear;
-    private String description;
+    private String about;
     private String imagePath;
+    private String cvPath;
+
 }
+/*
+Corresponding class to
+CREATE TABLE "user"
+(
+    "id"         SERIAL PRIMARY KEY NOT NULL,
+    "f_name"     varchar(30)        NOT NULL,
+    "l_name"     varchar(30)        NOT NULL,
+    "mail"       varchar(60) UNIQUE NOT NULL,
+    "phone"      varchar(15) UNIQUE NOT NULL,
+    "password"   varchar(30)        NOT NULL,
+    "gender"     char(1)            NOT NULL,         -- enum : male female other
+    "dob"        date               NOT NULL,
+    "created_at" timestamp DEFAULT clock_timestamp(), -- automatically initialized
+    -- "faculty" varchar(40) NOT NULL,
+    "profession" varchar(100)       NOT NULL,
+    "g_year"     date               NOT NULL,
+
+    "company"    varchar(100),
+    "open2work"  boolean NOT NULL DEFAULT false,
+    "about"      text,
+    "image_path" varchar(100),
+    "cv_path"    varchar(100)
+);
+ */

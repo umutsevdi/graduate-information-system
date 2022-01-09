@@ -12,7 +12,6 @@ import java.sql.DriverManager;
 
 // This component will be initialized
 @Configuration
-@Getter
 @ToString
 @Log4j2
 public class DBConfig {
@@ -25,7 +24,8 @@ public class DBConfig {
     @Value("${spring.datasource.password}")
     private String password;
     // = "password";
-    private Connection connection;
+    @Getter
+    private Connection instance;
 
     public DBConfig() {
         System.out.println("@init::dbInstance");
@@ -35,10 +35,10 @@ public class DBConfig {
     public void init() throws Exception {
 
         System.out.println("DBInstance was constructed");
-        connection = DriverManager.getConnection(url, username, password);
+        instance = DriverManager.getConnection(url, username, password);
         DBConfig.log.info(
                 "connecting to " + url + " using :{\n'username' : " + username + ",\n'password' : " + password + "\n}");
-        DBConfig.log.info(connection.toString() + " started...");
+        DBConfig.log.info(instance.toString() + " started...");
         DBConfig.log.debug("username=" + username);
         DBConfig.log.info("Connection Successful");
     }

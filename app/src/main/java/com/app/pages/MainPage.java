@@ -1,6 +1,6 @@
-package com.app.controller;
+package com.app.pages;
 
-import com.app.controller.components.TopMenu;
+import com.app.pages.components.TopMenu;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
