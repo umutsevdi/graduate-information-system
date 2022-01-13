@@ -23,7 +23,7 @@ begin
     else
         delete from "likes" where likes."from"=old."from";
     end if;
-    return new;
+    return old;
 end;
 $body$
     language plpgsql volatile;

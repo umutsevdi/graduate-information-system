@@ -6,8 +6,13 @@ begin
         new."from" not in (select "id" from "user")
         ) then
         raise exception 'exception: given user is not found';
+
+    elsif (exists(select * from likes where likes."from" = new."from" and likes.post_id = new.post_id)
+        ) then
+        raise exception 'exception: user already liked given post';
     else
         update announcement set "like"="like" + 1 where new.post_id = announcement.id;
+
     end if;
     return new;
 end;
@@ -18,14 +23,8 @@ create or replace function deleteLikeControl()
     returns trigger as
 $body$
 begin
-    if (
-        new."from" not in (select "id" from "user")
-        ) then
-        raise exception 'exception: given user is not found';
-    else
-        update announcement set "like"="like" - 1 where new.post_id = announcement.id;
-    end if;
-    return new;
+    update announcement set "like"="like" - 1 where new.post_id = announcement.id;
+    return old;
 end;
 $body$
     language plpgsql volatile;
@@ -39,7 +38,7 @@ execute procedure createLikeControl();
 
 
 create trigger "delete_like"
-    before delete
+    after delete
     on "likes"
     for each row
 execute procedure deleteLikeControl();

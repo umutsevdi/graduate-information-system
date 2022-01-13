@@ -1,57 +1,35 @@
-package com.app.pages;
+package com.app.pages.components;
 
 import com.app.model.User;
-import com.app.pages.components.TopMenu;
+import com.app.pages.LoginView;
+import com.app.pages.UserView;
+import com.app.service.AnnouncementService;
 import com.app.service.AuthenticationService;
-import com.vaadin.flow.component.Key;
+import com.app.service.UserService;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import lombok.Getter;
 
-@Route("")
-@PageTitle("Home | Graduate Information System")
-public class MainPage extends AppLayout
-        implements BeforeEnterObserver {
-    private User user;
-    private String token;
-    private final AuthenticationService authenticationService;
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        token = ((String) VaadinSession.getCurrent().getAttribute("token"));
-        if (token == null || token.isBlank()) {
-            System.out.println(
-                    "I'd just like to interject for a moment. What you're referring to as Linux,\n" +
-                            "is in fact, GNU/Linux, or as I've recently taken to calling it, GNU plus Linux.\n" +
-                            "Linux is not an operating system unto itself, but rather another free component\n" +
-                            "of a fully functioning GNU system made useful by the GNU core libs, shell\n" +
-                            "utilities and vital system components comprising a full OS as defined by POSIX"
-            );
-            event.rerouteTo(LoginView.class);
-        }
-    }
-
-    public MainPage(AuthenticationService authenticationService) {
+@Getter
+public class BasicLayout extends AppLayout {
+    private AuthenticationService authenticationService;
+    private final UserService userService;
+    User user;
+    public BasicLayout(AuthenticationService authenticationService,UserService userService){
         this.authenticationService = authenticationService;
+        this.userService = userService;
         try {
             user = authenticationService.validateUser(
                     (String) VaadinSession.getCurrent().getAttribute("token"));
@@ -98,5 +76,4 @@ public class MainPage extends AppLayout
         notification.open();
 
     }
-
 }

@@ -1,6 +1,7 @@
 package com.app.service;
 
 import com.app.config.DBConfig;
+import com.app.model.AuthenticationFailedException;
 import com.app.model.Requests.RegisterRequest;
 import com.app.model.User;
 import lombok.AllArgsConstructor;
@@ -74,7 +75,7 @@ public class AuthenticationService {
 
     public User validateUser(String token) throws Exception {
         if (!validate(token)) {
-            throw new Exception("InvalidToken");
+            throw new AuthenticationFailedException();
         }
         return userService.findUserById(sessions.get(token).getId());
     }

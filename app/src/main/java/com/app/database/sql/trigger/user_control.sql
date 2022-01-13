@@ -41,7 +41,7 @@ begin
     end if;
 
 
-    return new;
+    return old;
 end;
 $body$
     language plpgsql volatile;

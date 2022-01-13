@@ -30,7 +30,6 @@ public class UserService {
 
     public <T> User executeSelectQuery(String by, T value) throws Exception {
         Statement statement = db.getInstance().createStatement();
-        System.out.println("Executing query for " + by);
         ResultSet result;
         if (value.getClass().equals(String.class)) {
             result = statement.executeQuery(
@@ -40,7 +39,6 @@ public class UserService {
                     "SELECT * FROM \"user\" WHERE \"user\"." + by + " = " + value);
         }
         result.next();
-
         return new User(
                 result.getInt("id"),
                 result.getString("f_name"),

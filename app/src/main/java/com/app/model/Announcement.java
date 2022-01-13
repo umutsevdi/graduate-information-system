@@ -1,9 +1,6 @@
 package com.app.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -11,6 +8,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Announcement {
     private Integer id;
     private Integer from;
@@ -19,6 +17,12 @@ public class Announcement {
     private String link;
     private Integer like;
     private Timestamp createdAt;
+    public Announcement(Integer id,String title, String content,String link){
+        this.id=id;
+        this.title=title;
+        this.content=content;
+        this.link=link;
+    }
 }
 
 /* Corresponding Class to
