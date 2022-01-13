@@ -13,8 +13,9 @@ import java.sql.Timestamp;
 @Setter
 public class Announcement {
     private Integer id;
+    private Integer from;
     private String title;
-    private String context;
+    private String content;
     private String link;
     private Integer like;
     private Timestamp createdAt;

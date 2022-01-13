@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.config.DBConfig;
 import com.app.model.Requests.RegisterRequest;
+import com.app.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,11 @@ import java.util.HashMap;
 public class AuthenticationService {
     private HashMap<String, UserSession> sessions;
     private DBConfig db;
+    private UserService userService;
 
     public void register(RegisterRequest request) throws Exception {
         Statement statement = db.getInstance().createStatement();
-        StringBuilder builder = new StringBuilder();
-
-
-        ResultSet result = statement.executeQuery(String.format(
+        statement.executeQuery(String.format(
                 """
                                 insert into "user" (f_name, l_name, mail, phone, password, gender, dob, profession, g_year, company)"+
                                  "values ('%s', '%s', '%s', '%s', '%s', '%c', '%s','%s','%s','%s')
@@ -51,7 +50,9 @@ public class AuthenticationService {
             if (result.getString("password").equals(password)) {
                 String token = java.util.UUID.randomUUID().toString();
                 UserSession session = new UserSession(
-                        result.getString("mail"), LocalDateTime.now());
+                        LocalDateTime.now(),
+                        userService.findUserByMail(mail).getId()
+                );
                 sessions.put(token, session);
                 System.out.println("@createSession : " + session);
                 return token;
@@ -62,9 +63,20 @@ public class AuthenticationService {
 
     public Boolean validate(String token) {
         if (sessions.get(token) != null) {
-            return sessions.get(token).getTime().plusDays(1).isAfter(LocalDateTime.now());
+            if (sessions.get(token).getTime().plusDays(1).isBefore(LocalDateTime.now())) {
+                sessions.remove(token);
+                return false;
+            }
+            return true;
         }
         return false;
+    }
+
+    public User validateUser(String token) throws Exception {
+        if (!validate(token)) {
+            throw new Exception("InvalidToken");
+        }
+        return userService.findUserById(sessions.get(token).getId());
     }
 
 }

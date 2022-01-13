@@ -1,6 +1,8 @@
 package com.app.pages;
 
+import com.app.model.User;
 import com.app.service.AuthenticationService;
+import com.app.service.UserService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -15,11 +17,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.RequestHandler;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinResponse;
+import com.vaadin.flow.server.VaadinSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import javax.servlet.http.Cookie;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +34,12 @@ import java.util.Map;
 @PageTitle("Login | Graduate Information System")
 public class LoginView extends VerticalLayout {
     AuthenticationService authenticationService;
+    UserService userService;
     private int maxWidth;
 
-    public LoginView(AuthenticationService authenticationService) {
+    public LoginView(AuthenticationService authenticationService, UserService userService) {
         this.authenticationService = authenticationService;
+        this.userService = userService;
         addClassName("login-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -49,10 +58,16 @@ public class LoginView extends VerticalLayout {
                         } else {
                             String token = authenticationService.login(mail.getValue(), password.getValue());
                             if (token != null) {
-                                Notification.show(token);
                                 Notification.show("Login Successful, redirecting...");
                                 this.getUI().ifPresent(
-                                        ui -> ui.navigate(MainPage.class,token));
+                                        ui -> {
+                                            try {
+                                                VaadinSession.getCurrent().setAttribute("token",token );
+                                                ui.navigate(MainPage.class);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        });
                             } else {
                                 Notification.show("Wrong email address or password. Please try again");
                             }

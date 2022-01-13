@@ -1,57 +1,46 @@
 package com.app.pages;
 
 import com.app.model.User;
-import com.app.pages.components.TopMenu;
+import com.app.pages.components.PostLayout;
+import com.app.service.AnnouncementService;
 import com.app.service.AuthenticationService;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
-@Route("")
-@PageTitle("Home | Graduate Information System")
-public class MainPage extends AppLayout
-        implements BeforeEnterObserver {
+@Route("profile")
+@PageTitle("User Profile | Graduate Information System")
+public class UserView extends HorizontalLayout implements HasUrlParameter<Integer> {
+    private Integer userId;
     private User user;
-    private String token;
     private final AuthenticationService authenticationService;
+    private final AnnouncementService announcementService;
 
     @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        token = ((String) VaadinSession.getCurrent().getAttribute("token"));
-        if (token == null || token.isBlank()) {
-            System.out.println(
-                    "I'd just like to interject for a moment. What you're referring to as Linux,\n" +
-                            "is in fact, GNU/Linux, or as I've recently taken to calling it, GNU plus Linux.\n" +
-                            "Linux is not an operating system unto itself, but rather another free component\n" +
-                            "of a fully functioning GNU system made useful by the GNU core libs, shell\n" +
-                            "utilities and vital system components comprising a full OS as defined by POSIX"
-            );
-            event.rerouteTo(LoginView.class);
-        }
+    public void setParameter(BeforeEvent event,
+                             Integer userId) {
+        this.userId = userId;
     }
 
-    public MainPage(AuthenticationService authenticationService) {
+    public UserView(AuthenticationService authenticationService, AnnouncementService announcementService) throws Exception {
         this.authenticationService = authenticationService;
+        this.announcementService = announcementService;
         try {
             user = authenticationService.validateUser(
                     (String) VaadinSession.getCurrent().getAttribute("token"));
@@ -61,13 +50,21 @@ public class MainPage extends AppLayout
             this.getUI().ifPresent(
                     ui -> ui.navigate(LoginView.class));
         }
+        VerticalLayout announcements = new VerticalLayout();
+        announcementService.getAnnouncements(userId).forEach(
+                iter -> announcements.add(new PostLayout(user, iter))
+        );
+        Tabs tabs = new Tabs();
+        tabs.add(
+            announcements
+        );
+
 
         DrawerToggle toggle = new DrawerToggle();
         H1 title = new H1("Graduate Information System");
         title.getStyle()
                 .set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
-        Tabs tabs = new Tabs();
         tabs.add(
                 new Tab("Home")
         );
@@ -79,18 +76,11 @@ public class MainPage extends AppLayout
         Button searchButton = new Button("Search",
                 click -> {
                     if (!searchbar.getValue().isBlank()) {
-                        this.getUI().ifPresent(ui -> ui.navigate(UserView.class,
-                                Integer.valueOf(searchbar.getValue())));
+                        this.getUI().ifPresent(ui -> ui.navigate(SearchPage.class, searchbar.getValue()));
                     }
                 });
         searchButton.setIcon(VaadinIcon.SEARCH.create());
-        addToDrawer(tabs);
 
-        addToNavbar(
-                toggle, logo, title, searchbar, searchButton
-        );
-
-        setContent(new TopMenu(user));
         Notification notification = new Notification();
         notification.add(new Icon(VaadinIcon.SIGN_IN), new Text("Welcome " + user.getFirstName() + " " + user
                 .getSecondName()));
@@ -98,5 +88,4 @@ public class MainPage extends AppLayout
         notification.open();
 
     }
-
 }

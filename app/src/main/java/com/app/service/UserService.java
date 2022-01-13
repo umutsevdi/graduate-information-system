@@ -19,50 +19,28 @@ import java.sql.Statement;
 public class UserService {
     private DBConfig db;
 
-    public User getUser(String mail) throws Exception {
-        Statement statement = db.getInstance().createStatement();
-        System.out.println(mail);
-        ResultSet result = statement.executeQuery(
-                "SELECT * FROM \"user\" WHERE \"user\".mail='" + mail + "'");
-        //"SELECT * FROM \"user\" WHERE \"user\".mail='" + mail + "'");
-        result.next();
-        System.out.println(result.getString("f_name"));
+    public User findUserById(Integer id) throws Exception {
+        return executeSelectQuery("id", id);
+    }
 
-        System.out.println(result.getInt("id"));
-        System.out.println(result.getString("f_name"));
-        System.out.println(result.getString("l_name"));
-        System.out.println(result.getString("mail"));
-        System.out.println(result.getString("phone"));
-        System.out.println(result.getString("gender"));
-        System.out.println(result.getDate("dob"));
-        System.out.println(result.getTimestamp("created_at"));
-        System.out.println(result.getString("profession"));
-        System.out.println(result.getDate("g_year"));
-        System.out.println(result.getString("company"));
-        System.out.println(result.getBoolean("open2work"));
-        System.out.println(result.getString("about"));
-        System.out.println(result.getString("image_path"));
-        System.out.println(result.getString("cv_path"));
-        log.info(
-                result.getString("f_name"));
-        /*
-        System.out.println(
-                result.getInt("id") );
-                        result.getString("f_name") +
-                        result.getString("l_name") +
-                        result.getString("mail") +
-                        result.getString("phone") + null +
-                        result.getString("gender") +
-                        result.getDate("dob") +
-                        result.getTimestamp("created_at") +
-                        result.getString("profession") +
-                        result.getDate("g_year") +
-                        result.getString("company") +
-                        result.getBoolean("open2work") +
-                        result.getString("about") +
-                        result.getString("image_path") +
-                        result.getString("cv_path")
-        );
+    public User findUserByMail(String mail) throws Exception {
+        return executeSelectQuery("mail", mail);
+    }
+
+
+    public <T> User executeSelectQuery(String by, T value) throws Exception {
+        Statement statement = db.getInstance().createStatement();
+        System.out.println("Executing query for " + by);
+        ResultSet result;
+        if (value.getClass().equals(String.class)) {
+            result = statement.executeQuery(
+                    "SELECT * FROM \"user\" WHERE \"user\"." + by + " = '" + value + "'");
+        } else {
+            result = statement.executeQuery(
+                    "SELECT * FROM \"user\" WHERE \"user\"." + by + " = " + value);
+        }
+        result.next();
+
         return new User(
                 result.getInt("id"),
                 result.getString("f_name"),
@@ -80,9 +58,5 @@ public class UserService {
                 result.getString("image_path"),
                 result.getString("cv_path")
         );
-
-         */
-        return new User();
     }
-
 }

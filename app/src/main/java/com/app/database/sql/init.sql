@@ -26,15 +26,15 @@ CREATE TABLE "user"
     "mail"       varchar(60) UNIQUE NOT NULL,
     "phone"      varchar(15) UNIQUE NOT NULL,
     "password"   varchar(30)        NOT NULL,
-    "gender"     varchar(15)            NOT NULL,         -- enum : male female other
+    "gender"     varchar(15)        NOT NULL,                           -- enum : male female other
     "dob"        date               NOT NULL,
-    "created_at" timestamp DEFAULT clock_timestamp(), -- automatically initialized
+    "created_at" timestamp                   DEFAULT clock_timestamp(), -- automatically initialized
     -- "faculty" varchar(40) NOT NULL,
     "profession" varchar(100)       NOT NULL,
     "g_year"     date               NOT NULL,
 
     "company"    varchar(100),
-    "open2work"  boolean NOT NULL DEFAULT false,
+    "open2work"  boolean            NOT NULL DEFAULT false,
     "about"      text,
     "image_path" varchar(100),
     "cv_path"    varchar(100)
@@ -75,8 +75,17 @@ CREATE TABLE "form"
     "from"       int NOT NULL,
     "to"         int NOT NULL,
     "created_at" timestamp DEFAULT clock_timestamp() -- automatically initialized
-
 );
+
+
+CREATE TABLE "likes"
+(
+    "id"         SERIAL PRIMARY KEY,
+    "from"       int NOT NULL,
+    "post_id"    int NOT NULL,
+    "created_at" timestamp DEFAULT clock_timestamp() -- automatically initialized
+);
+
 ALTER TABLE "job_ad"
     ADD FOREIGN KEY ("from") REFERENCES "user" ("id");
 
@@ -91,3 +100,9 @@ ALTER TABLE "form"
 
 ALTER TABLE "user"
     ADD FOREIGN KEY ("profession") REFERENCES "university" ("profession_name");
+
+ALTER TABLE "likes"
+    ADD FOREIGN KEY ("from") REFERENCES "user" ("id");
+
+ALTER TABLE "likes"
+    ADD FOREIGN KEY ("post_id") REFERENCES "announcement" ("id");
