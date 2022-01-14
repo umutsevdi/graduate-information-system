@@ -17,7 +17,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Getter
 public class AuthenticationService {
-    private HashMap<String, UserSession> sessions;
+    @Getter private static final HashMap<String, UserSession> sessions = new HashMap<>();
     private DBConfig db;
     private UserService userService;
 

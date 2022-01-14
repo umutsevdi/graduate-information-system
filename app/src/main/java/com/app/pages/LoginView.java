@@ -8,12 +8,16 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 @Route("login")
@@ -30,9 +34,8 @@ public class LoginView extends VerticalLayout {
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
-
-        Image logo = new Image("https://dx5i3n065oxey.cloudfront.net/platform/9531/assets/logo.png", "Logo");
-        logo.setMaxHeight(256, Unit.PIXELS);
+        Image logo = new Image("https://www.yildiz.edu.tr/images/files/ytulogopng.png", "Logo");
+        logo.setMinHeight(128, Unit.PIXELS);
         TextField mail = new TextField("Email Address");
         PasswordField password = new PasswordField("Password");
         Button login = new Button(
@@ -48,7 +51,7 @@ public class LoginView extends VerticalLayout {
                                 this.getUI().ifPresent(
                                         ui -> {
                                             try {
-                                                VaadinSession.getCurrent().setAttribute("token",token );
+                                                VaadinSession.getCurrent().setAttribute("token", token);
                                                 ui.navigate(App.class);
                                             } catch (Exception e) {
                                                 e.printStackTrace();

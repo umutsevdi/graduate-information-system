@@ -17,8 +17,7 @@ public class Announcement {
     private String link;
     private Integer like;
     private Timestamp createdAt;
-    public Announcement(Integer id,String title, String content,String link){
-        this.id=id;
+    public Announcement(String title, String content,String link){
         this.title=title;
         this.content=content;
         this.link=link;

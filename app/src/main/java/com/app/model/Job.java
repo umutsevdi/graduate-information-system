@@ -12,11 +12,17 @@ import java.time.LocalDateTime;
 @ToString
 
 public class Job {
-    int id;
-    private String from;
+    Integer id;
+    private Integer from;
     private String title;
     private String content;
     private Timestamp createdAt;
+
+    public Job(Integer from, String title, String content) {
+        this.from = from;
+        this.title = title;
+        this.content = content;
+    }
 }
 /* Corresponding Class to
     CREATE TABLE "job_ad"

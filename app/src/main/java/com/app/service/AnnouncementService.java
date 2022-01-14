@@ -55,10 +55,6 @@ public class AnnouncementService {
                         announcement.getContent() + "', '" +
                         announcement.getLink() + "');"
         );
-        /*
-      into announcement ("from", title, content, link) values
-      (5, 'system engine', 'Test message', null);
-        */
     }
 
     public void deleteAnnouncement(Integer id) throws Exception {
@@ -67,14 +63,12 @@ public class AnnouncementService {
     }
 
     public Optional<Integer> toggleLike(Integer id, Integer announcementId) {
-        System.out.println("toggle like:"+id+","+announcementId);
         try {
             boolean state;
             Statement statement = db.getInstance().createStatement();
             ResultSet set = statement.executeQuery(
                     "SELECT count(*) as c FROM likes WHERE post_id=" + announcementId + " AND \"from\"=" + id);
             set.next();
-            System.out.println(set.getInt("c"));
             if (set.getInt("c") > 0) {
                 state = false;
                 statement.execute(
@@ -86,11 +80,9 @@ public class AnnouncementService {
                         "INSERT INTO likes(\"from\", post_id) VALUES (" + id + ", " + announcementId + ");"
                 );
             }
-            System.out.println(id + " like? " + announcementId + " = " + state);
             set = statement.executeQuery("SELECT count(*) as c FROM likes WHERE post_id=" + announcementId);
             set.next();
             return Optional.of(state ? set.getInt("c") : set.getInt("c") * -1);
-
         } catch (
                 Exception e) {
             e.printStackTrace();
@@ -101,7 +93,7 @@ public class AnnouncementService {
     private List<Announcement> constructElements(ResultSet set) throws Exception {
         List<Announcement> result = new LinkedList<>();
         int i = 0;
-        while (set.next()) {
+        while (set.next() && i < 20) {
             System.out.printf("%d \t", i++);
             result.add(new Announcement(
                     set.getInt("id"),

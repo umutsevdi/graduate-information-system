@@ -1,32 +1,45 @@
 package com.app.pages;
 
 import com.app.model.User;
+import com.app.service.AnnouncementService;
 import com.app.service.AuthenticationService;
-import com.vaadin.flow.component.Text;
+import com.app.service.JobService;
+import com.app.service.UserService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H6;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.dom.ThemeList;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import lombok.Getter;
 
 @Route("")
 @PageTitle("Home | Graduate Information System")
+@Theme(value = Lumo.class, variant = Lumo.DARK)
+@Getter
 public class App extends AppLayout
-        implements BeforeEnterObserver {
+        implements BeforeEnterObserver, AfterNavigationObserver {
     private User user;
     private String token;
-    private final AuthenticationService authenticationService;
+    private final AnnouncementService announcementService;
+    private final UserService userService;
+    private final JobService jobService;
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
@@ -36,12 +49,15 @@ public class App extends AppLayout
         }
     }
 
-    public App(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
+    public App(AuthenticationService authenticationService, AnnouncementService announcementService, UserService userService, JobService jobService) {
+        this.announcementService = announcementService;
+        this.userService = userService;
+        this.jobService = jobService;
         try {
             user = authenticationService.validateUser(
                     (String) VaadinSession.getCurrent().getAttribute("token"));
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             System.out.println(e.getMessage());
             Notification.show("Token is expired");
             this.getUI().ifPresent(
@@ -53,33 +69,103 @@ public class App extends AppLayout
         title.getStyle()
                 .set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
-        Image logo = new Image("https://dx5i3n065oxey.cloudfront.net/platform/9531/assets/logo.png", "Logo");
+        Image logo = new Image("https://www.yildiz.edu.tr/images/files/ytulogopng.png", "Logo");
         logo.setMaxHeight(44, Unit.PIXELS);
-        addToNavbar(new DrawerToggle(),logo);
+
+
+        Button toggleButton = new Button();
+        toggleButton.setIcon(VaadinIcon.MOON_O.create());
+        toggleButton.addClickListener(click -> {
+            ThemeList themeList = UI.getCurrent().getElement().getThemeList(); // (1)
+
+            if (themeList.contains(Lumo.DARK)) {
+                toggleButton.setIcon(VaadinIcon.MOON_O.create());
+                themeList.remove(Lumo.DARK);
+            } else {
+                toggleButton.setIcon(VaadinIcon.MOON.create());
+                themeList.add(Lumo.DARK);
+            }
+        });
+        addToNavbar(toggle, toggleButton);
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+        HorizontalLayout left = new HorizontalLayout();
+        logo.setHeight(64, Unit.PIXELS);
+        left.add(logo);
+        left.addClickListener(click -> UI.getCurrent().getPage().reload());
+
+        addToNavbar(left);
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        if (user == null) {
+            UI.getCurrent().navigate(LoginView.class);
+            return;
+        }
         TextField searchbar = new TextField();
+        searchbar.setMinWidth(400, Unit.PIXELS);
         Button searchButton = new Button("Search",
                 click -> {
                     if (!searchbar.getValue().isBlank()) {
-                        this.getUI().ifPresent(ui -> ui.navigate(UserView.class,
-                                Integer.valueOf(searchbar.getValue())));
+                        User found = userService.findByName(searchbar.getValue().split(" ")[0], searchbar.getValue().split(" ")[1]);
+                        if (found != null) {
+                            setContent(new UserView(found, user, this));
+                        } else {
+                            Notification.show(searchbar.getValue() + " not found");
+                            searchbar.setValue("");
+                        }
                     }
                 });
         searchButton.setIcon(VaadinIcon.SEARCH.create());
-        Tabs tabs = new Tabs();
-        tabs.addSelectedChangeListener(event -> {
-            setContent(event.getSelectedTab());
+
+        Avatar avatar = new Avatar(user.getFirstName() + " " + user.getSecondName(), "https://tradingbeasts.com/wp-content/uploads/2019/05/avatar.jpg");
+        if (user.getImagePath() != null) {
+            avatar.setImage(user.getImagePath());
+        }
+
+
+        HorizontalLayout userBar = new HorizontalLayout(avatar, new H6(user.getFirstName() + " " + user.getSecondName()));
+        userBar.setAlignItems(FlexComponent.Alignment.CENTER);
+        userBar.setAlignSelf(FlexComponent.Alignment.STRETCH);
+
+        userBar.addClickListener(click -> setContent(new UserView(user, user, this)));
+        Tab home = new Tab(VaadinIcon.HOME.create(), new Span("Home"));
+        Tab profile = new Tab(VaadinIcon.USER.create(), new Span("Profile"));
+        Tab myClass = new Tab(VaadinIcon.BUILDING.create(), new Span("My Class"));
+        Tab jobs = new Tab(VaadinIcon.BRIEFCASE.create(), new Span("Jobs"));
+        Tab settings = new Tab(VaadinIcon.COG.create(), new Span("Settings"));
+        Tab logout = new Tab(VaadinIcon.SIGN_OUT.create(), new Span("Log Out"));
+        Tabs drawerTab = new Tabs(
+                home, profile, myClass, jobs, settings);
+        drawerTab.setOrientation(Tabs.Orientation.VERTICAL);
+        drawerTab.addSelectedChangeListener(selectedChangeEvent -> {
+            if (!selectedChangeEvent.getSelectedTab().equals(selectedChangeEvent.getPreviousTab())) {
+
+                Tab selectedTab = selectedChangeEvent.getSelectedTab();
+                if (home.equals(selectedTab)) {
+                    setContent(new Home(user, this));
+                } else if (profile.equals(selectedTab)) {
+                    setContent(new UserView(user, user, this));
+                } else if (myClass.equals(selectedTab)) {
+                    setContent(new Home(user, this));
+                } else if (jobs.equals(selectedTab)) {
+                    setContent(new JobEntries(user, this));
+                    //    UI.getCurrent().getPage().reload();
+                } else if (settings.equals(selectedTab)) {
+                    setContent(new Home(user, this));
+                } else if (logout.equals(selectedTab)) {
+                    AuthenticationService.getSessions().remove("token");
+                    UI.getCurrent().getPage().reload();
+                }
+                drawerTab.setSelectedTab(selectedChangeEvent.getSelectedTab());
+            }
         });
-        addToDrawer(tabs);
-        addToNavbar(
-                title, searchbar, searchButton
-        );
+        addToNavbar(searchbar, searchButton, userBar);
 
-        Notification notification = new Notification();
-        notification.add(new Icon(VaadinIcon.SIGN_IN), new Text("Welcome " + user.getFirstName() + " " + user
-                .getSecondName()));
-        notification.setDuration(10);
-        notification.open();
+        setContent(new Home(user, this));
 
+
+        addToDrawer(drawerTab);
     }
-
 }

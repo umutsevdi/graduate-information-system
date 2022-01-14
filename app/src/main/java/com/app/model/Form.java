@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 @ToString
 
 public class Form {
-    private String id;
-    private String from;
-    private String to;
+    private Integer id;
+    private Integer from;
+    private Integer to;
     private Timestamp createdAt;
 }
 
