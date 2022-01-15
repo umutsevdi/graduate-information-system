@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +27,7 @@ public class UserService {
             Statement statement = db.getInstance().createStatement();
             return constructUser(statement.executeQuery(
                     "SELECT * FROM \"user\" WHERE f_name='" + firstName + "' AND l_name='" + secondName + "'"
-            ));
+            )).get(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -37,7 +39,7 @@ public class UserService {
             Statement statement = db.getInstance().createStatement();
             return constructUser(statement.executeQuery(
                     "SELECT * FROM \"user\" WHERE id=" + id
-            ));
+            )).get(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,6 +51,18 @@ public class UserService {
             Statement statement = db.getInstance().createStatement();
             return constructUser(statement.executeQuery(
                     "SELECT * FROM \"user\" WHERE mail='" + mail + "'"
+            )).get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<User> findByProfession(String profession) {
+        try {
+            Statement statement = db.getInstance().createStatement();
+            return constructUser(statement.executeQuery(
+                    "SELECT * FROM \"user\" WHERE profession='" + profession + "'"
             ));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,26 +70,42 @@ public class UserService {
         return null;
     }
 
-    public User constructUser(ResultSet result) {
+    public String getFaculty(String profession){
         try {
-            result.next();
-            return new User(
-                    result.getInt("id"),
-                    result.getString("f_name"),
-                    result.getString("l_name"),
-                    result.getString("mail"),
-                    result.getString("phone"), null,
-                    result.getString("gender"),
-                    result.getDate("dob"),
-                    result.getTimestamp("created_at"),
-                    result.getString("profession"),
-                    result.getDate("g_year"),
-                    result.getString("company"),
-                    result.getBoolean("open2work"),
-                    result.getString("about"),
-                    result.getString("image_path"),
-                    result.getString("cv_path")
+            Statement statement = db.getInstance().createStatement();
+            ResultSet set = statement.executeQuery(
+                    "SELECT faculty_name FROM university WHERE profession_name='" + profession + "'"
             );
+            set.next();
+            return set.getString("faculty_name");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<User> constructUser(ResultSet result) {
+        List<User> users = new LinkedList<>();
+        try {
+            while (result.next()) {
+                users.add(new User(
+                        result.getInt("id"),
+                        result.getString("f_name"),
+                        result.getString("l_name"),
+                        result.getString("mail"),
+                        result.getString("phone"), null,
+                        result.getString("gender"),
+                        result.getDate("dob"),
+                        result.getTimestamp("created_at"),
+                        result.getString("profession"),
+                        result.getDate("g_year"),
+                        result.getString("company"),
+                        result.getBoolean("open2work"),
+                        result.getString("about"),
+                        result.getString("image_path"),
+                        result.getString("cv_path")));
+            }
+            return users;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

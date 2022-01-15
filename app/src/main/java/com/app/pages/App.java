@@ -119,12 +119,10 @@ public class App extends AppLayout
                 });
         searchButton.setIcon(VaadinIcon.SEARCH.create());
 
-        Avatar avatar = new Avatar(user.getFirstName() + " " + user.getSecondName(), "https://tradingbeasts.com/wp-content/uploads/2019/05/avatar.jpg");
+        Avatar avatar = new Avatar(user.getFirstName() + " " + user.getSecondName());
         if (user.getImagePath() != null) {
             avatar.setImage(user.getImagePath());
         }
-
-
         HorizontalLayout userBar = new HorizontalLayout(avatar, new H6(user.getFirstName() + " " + user.getSecondName()));
         userBar.setAlignItems(FlexComponent.Alignment.CENTER);
         userBar.setAlignSelf(FlexComponent.Alignment.STRETCH);
@@ -137,25 +135,26 @@ public class App extends AppLayout
         Tab settings = new Tab(VaadinIcon.COG.create(), new Span("Settings"));
         Tab logout = new Tab(VaadinIcon.SIGN_OUT.create(), new Span("Log Out"));
         Tabs drawerTab = new Tabs(
-                home, profile, myClass, jobs, settings);
+                home, profile, myClass, jobs, settings, logout);
         drawerTab.setOrientation(Tabs.Orientation.VERTICAL);
         drawerTab.addSelectedChangeListener(selectedChangeEvent -> {
             if (!selectedChangeEvent.getSelectedTab().equals(selectedChangeEvent.getPreviousTab())) {
 
                 Tab selectedTab = selectedChangeEvent.getSelectedTab();
+                user = userService.findUserById(user.getId());
                 if (home.equals(selectedTab)) {
                     setContent(new Home(user, this));
                 } else if (profile.equals(selectedTab)) {
                     setContent(new UserView(user, user, this));
                 } else if (myClass.equals(selectedTab)) {
-                    setContent(new Home(user, this));
+                    setContent(new MyClass(user, this));
                 } else if (jobs.equals(selectedTab)) {
                     setContent(new JobEntries(user, this));
-                    //    UI.getCurrent().getPage().reload();
-                } else if (settings.equals(selectedTab)) {
+                } else if (settings.equals(selectedTab)) { //TODO
                     setContent(new Home(user, this));
                 } else if (logout.equals(selectedTab)) {
                     AuthenticationService.getSessions().remove("token");
+                    UI.getCurrent().getPage().setLocation("login");
                     UI.getCurrent().getPage().reload();
                 }
                 drawerTab.setSelectedTab(selectedChangeEvent.getSelectedTab());

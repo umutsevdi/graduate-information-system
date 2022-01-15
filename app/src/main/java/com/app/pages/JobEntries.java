@@ -56,8 +56,12 @@ public class JobEntries extends VerticalLayout {
     private static final SerializableBiConsumer<Span, Job> fromUpdater = ((span, job) -> {
         HorizontalLayout item = new HorizontalLayout();
         User owner = parent.getUserService().findUserById(job.getFrom());
+        if (owner.getImagePath() != null)
+            item.add(new Avatar(owner.getFirstName() + " " + owner.getSecondName(), owner.getImagePath()));
+        else
+            item.add(new Avatar(owner.getFirstName() + " " + owner.getSecondName()));
+
         item.add(
-                new Avatar(owner.getFirstName() + " " + owner.getSecondName(), owner.getImagePath()),
                 new Text(owner.getFirstName() + " " + owner.getSecondName()));
         item.addClickListener(click -> {
             parent.setContent(new UserView(owner, parent.getUser(), parent));

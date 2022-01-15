@@ -17,10 +17,12 @@ public class Announcement {
     private String link;
     private Integer like;
     private Timestamp createdAt;
-    public Announcement(String title, String content,String link){
-        this.title=title;
-        this.content=content;
-        this.link=link;
+
+    public Announcement(Integer from, String title, String content, String link) {
+        this.from = from;
+        this.title = title;
+        this.content = content;
+        this.link = link;
     }
 }
 

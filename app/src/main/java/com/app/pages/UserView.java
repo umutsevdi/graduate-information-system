@@ -2,13 +2,12 @@ package com.app.pages;
 
 import com.app.model.Announcement;
 import com.app.model.User;
+import com.app.pages.components.AnnouncementLayout;
 import com.app.pages.components.PostLayout;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -38,25 +37,18 @@ public class UserView extends VerticalLayout {
         Accordion about = new Accordion();
         about.add("About", new Paragraph(searchedUser.getAbout()));
         add(personalInformation, about);
-
+        if(searchedUser.getCvPath()!=null){
+            Accordion cv = new Accordion();
+            cv.add("CV",new Anchor(searchedUser.getCvPath(),"CV"));
+            add(cv);
+        }
         if (searchedUser.getId().equals(user.getId())) {
-            add(new MessageInput(ev -> {
-                try {
-                    parent.getAnnouncementService().createAnnouncement(new Announcement("Title", ev.getValue(), ""));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }));
+            add(new AnnouncementLayout(user, parent.getAnnouncementService()));
         }
         VerticalLayout announcements = new VerticalLayout();
         try {
             for (Announcement iter : parent.getAnnouncementService().getAnnouncements(searchedUser.getId())) {
-                PostLayout post = new PostLayout(searchedUser, user, iter, parent.getAnnouncementService(), false);
-                post.getTop().addClickListener(click -> {
-                    parent.setContent(new UserView(
-                            parent.getUserService().findUserById(iter.getFrom()), user, parent));
-                    UI.getCurrent().getPage().reload();
-                });
+                PostLayout post = new PostLayout(searchedUser, user, iter, parent, false);
                 announcements.add(post);
             }
         } catch (Exception e) {

@@ -2,10 +2,12 @@ package com.app.pages.components;
 
 import com.app.model.Announcement;
 import com.app.model.User;
-import com.app.service.AnnouncementService;
+import com.app.pages.App;
+import com.app.pages.UserView;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
@@ -14,6 +16,7 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.Getter;
@@ -24,27 +27,31 @@ import java.util.Optional;
 @JsModule("./src/components/ex-card.js")
 @Getter
 public class PostLayout extends VerticalLayout implements HasStyle, HasComponents {
-    private HorizontalLayout top;
 
-    public PostLayout(User owner, User user, Announcement announcement, AnnouncementService announcementService, Boolean badgesOn) {
+    public PostLayout(User owner, User user, Announcement announcement, App parent, Boolean badgesOn) {
         this.setAlignItems(Alignment.START);
-        top = new HorizontalLayout();
+        HorizontalLayout top = new HorizontalLayout();
         if (owner.getImagePath() != null) {
             top.add(new Avatar(owner.getFirstName() + " " + owner.getSecondName(), owner.getImagePath()));
         } else {
             top.add(new Avatar(owner.getFirstName() + " " + owner.getSecondName()));
         }
         top.add(new H5(owner.getFirstName() + " " + owner.getSecondName()));
+        add(top);
+        top.addClickListener(click -> {
+            parent.setContent(new UserView(owner, user, parent));
+        });
         if (badgesOn) {
-            add(user.getProfession());
+            add(new Text(user.getProfession()));
         }
-        add(top, new H4(announcement.getTitle().toUpperCase()), new Paragraph(announcement.getContent()));
+
+        add(new H4(announcement.getTitle().toUpperCase()), new Paragraph(announcement.getContent()));
         if (announcement.getLink() != null) {
             add(new Image(announcement.getLink(), announcement.getTitle()), new Paragraph());
         }
         Button like = new Button("", click ->
         {
-            Optional<Integer> likes = announcementService.toggleLike(user.getId(), announcement.getId());
+            Optional<Integer> likes = parent.getAnnouncementService().toggleLike(user.getId(), announcement.getId());
             if (likes.isPresent()) {
                 click.getSource().setText((likes.get() > 0 ? likes.get() : likes.get() * -1) + "");
                 if (likes.get() > 0)
@@ -53,8 +60,23 @@ public class PostLayout extends VerticalLayout implements HasStyle, HasComponent
                     click.getSource().setIcon(VaadinIcon.HEART_O.create());
             }
         });
+        HorizontalLayout bottomBar = new HorizontalLayout(like);
+
+        if (user.getId().equals(announcement.getFrom())) {
+            Button delete = new Button("", click -> {
+
+                try {
+                    parent.getAnnouncementService().deleteAnnouncement(announcement.getId());
+                } catch (Exception e) {
+                    Notification.show(e.getMessage());
+                }
+
+            });
+            delete.setIcon(VaadinIcon.TRASH.create());
+            bottomBar.add(delete);
+        }
         like.click();
         like.click();
-        add(like);
+        add(bottomBar);
     }
 }
