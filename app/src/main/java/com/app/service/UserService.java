@@ -85,6 +85,23 @@ public class UserService {
         return null;
     }
 
+    public List<String> getFaculties() {
+        List<String> result = new LinkedList<>();
+        try {
+            Statement statement = db.getInstance().createStatement();
+            ResultSet set = statement.executeQuery(
+                    "SELECT profession_name FROM university"
+            );
+            while (set.next()) {
+                result.add(set.getString("profession_name"));
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void updateUser(User user) throws Exception {
         Statement statement = db.getInstance().createStatement();
         statement.execute(
@@ -100,6 +117,26 @@ public class UserService {
                         "' WHERE id=" + user.getId()
         );
     }
+
+    public void createUser(User user) throws Exception {
+        Statement statement = db.getInstance().createStatement();
+        statement.execute(
+                "INSERT INTO \"user\"(f_name, l_name, mail, phone, password, gender, dob, profession, g_year, company, about, image_path, cv_path)  VALUES (" +
+                        "'" + user.getFirstName() +
+                        "','" + user.getSecondName() +
+                        "','" + user.getMail() +
+                        "','" + user.getPhone() +
+                        "','" + user.getPassword() +
+                        "','" + user.getGender() +
+                        "','" + user.getDob() +
+                        "','" + user.getProfession() +
+                        "','" + user.getGraduationYear() +
+                        "','" + user.getCompany() +
+                        "','" + user.getAbout() +
+                        "','" + user.getImagePath() +
+                        "','" + user.getCvPath() + "')");
+    }
+
 
     public List<User> constructUser(ResultSet result) {
         List<User> users = new LinkedList<>();

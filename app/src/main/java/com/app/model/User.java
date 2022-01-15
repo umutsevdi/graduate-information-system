@@ -31,6 +31,20 @@ public class User {
     private String imagePath;
     private String cvPath;
 
+    public User(String firstName, String secondName, String mail, String phone, String password, String gender, Date dob, String profession, Date graduationYear, String company, String about, String imagePath) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.mail = mail;
+        this.phone = phone;
+        this.password = password;
+        this.gender = gender;
+        this.dob = dob;
+        this.profession = profession;
+        this.graduationYear = graduationYear;
+        this.company = company;
+        this.about = about;
+        this.imagePath = imagePath;
+    }
 }
 /*
 Corresponding class to

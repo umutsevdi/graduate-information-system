@@ -3,6 +3,7 @@ package com.app.pages;
 import com.app.service.AuthenticationService;
 import com.app.service.UserService;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -68,7 +69,7 @@ public class LoginView extends VerticalLayout {
         login.addClickShortcut(Key.ENTER);
         login.setIcon(VaadinIcon.SIGN_IN.create());
         login.setAutofocus(true);
-        Button register = new Button("Register", click -> this.getUI().ifPresent(ui -> ui.navigate(App.class)));
+        Button register = new Button("Register", click -> UI.getCurrent().navigate(Register.class));
         register.setIcon(VaadinIcon.USER.create());
 
         add(logo, new H1("Graduate Information System"), mail, password, new HorizontalLayout(

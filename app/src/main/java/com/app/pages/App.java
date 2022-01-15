@@ -154,8 +154,7 @@ public class App extends AppLayout
                     setContent(new Home(user, this));
                 } else if (logout.equals(selectedTab)) {
                     AuthenticationService.getSessions().remove("token");
-                    UI.getCurrent().getPage().setLocation("login");
-                    UI.getCurrent().getPage().reload();
+                    UI.getCurrent().navigate(LoginView.class);
                 }
                 drawerTab.setSelectedTab(selectedChangeEvent.getSelectedTab());
             }
