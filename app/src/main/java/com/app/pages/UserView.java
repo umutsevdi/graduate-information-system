@@ -6,6 +6,7 @@ import com.app.pages.components.AnnouncementLayout;
 import com.app.pages.components.PostLayout;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -37,13 +38,15 @@ public class UserView extends VerticalLayout {
         Accordion about = new Accordion();
         about.add("About", new Paragraph(searchedUser.getAbout()));
         add(personalInformation, about);
-        if(searchedUser.getCvPath()!=null){
+        if (searchedUser.getCvPath() != null) {
             Accordion cv = new Accordion();
-            cv.add("CV",new Anchor(searchedUser.getCvPath(),"CV"));
+            cv.add("CV", new Anchor(searchedUser.getCvPath(), "CV"));
             add(cv);
         }
         if (searchedUser.getId().equals(user.getId())) {
-            add(new AnnouncementLayout(user, parent.getAnnouncementService()));
+            add(new Button("Edit Profile", click -> {
+                parent.setContent(new EditProfile(user, parent));
+            }), new AnnouncementLayout(user, parent.getAnnouncementService()));
         }
         VerticalLayout announcements = new VerticalLayout();
         try {

@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -70,7 +71,7 @@ public class UserService {
         return null;
     }
 
-    public String getFaculty(String profession){
+    public String getFaculty(String profession) {
         try {
             Statement statement = db.getInstance().createStatement();
             ResultSet set = statement.executeQuery(
@@ -82,6 +83,22 @@ public class UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void updateUser(User user) throws Exception {
+        Statement statement = db.getInstance().createStatement();
+        statement.execute(
+                "UPDATE \"user\" set " +
+                        "f_name='" + user.getFirstName() +
+                        "',l_name='" + user.getSecondName() +
+                        "',mail='" + user.getMail() +
+                        "',phone='" + user.getPhone() +
+                        "',dob='" + user.getDob() +
+                        "',about='" + user.getAbout() +
+                        "',image_path='" + user.getImagePath() +
+                        "',cv_path='" + user.getCvPath() +
+                        "' WHERE id=" + user.getId()
+        );
     }
 
     public List<User> constructUser(ResultSet result) {
