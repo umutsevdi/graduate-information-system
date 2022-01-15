@@ -52,7 +52,7 @@ For this I picked <a href ="https://vaadin.com/"> Vaadin Framework</a>. It is a 
 
 It took a while to learn all the components but the results were worth it!
 
-<img src="img/home.png" alt ="home">
+<img src="img/home2.png" alt ="home">
 
 ### Built With
 
