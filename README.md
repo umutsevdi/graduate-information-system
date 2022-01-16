@@ -42,10 +42,10 @@
 
 ## 1- About The Project
 
-In Database System's Lecture, we learned alot about database systems. And at the end of the semester we were required to build a GUI application that can perform different SQL queries. A classic approach would be using Java Swing Library with JDBC. But I didn't do that. 
-I had about a year of experience building projects with Spring Framework. And I know how powerful it is. Altough I have always built the backend of the projects and never really got a chance to try creating UI. 
+In Database System's Lecture, we learned a lot about database systems. And at the end of the semester, we were required to build a GUI application that can perform different SQL queries. A classic approach would be using Java Swing Library with JDBC. But I didn't do that. 
+I had about a year of experience building projects with Spring Framework. And I know how powerful it is. Although I have always built the backend of the projects and never really got a chance to try creating UI. 
 
-For this I picked <a href ="https://vaadin.com/"> Vaadin Framework</a>. It is a framework built on top of Spring, to create Progressive Web Applications. 
+For this, I picked <a href ="https://vaadin.com/"> Vaadin Framework</a>. It is a framework built on top of Spring, to create Progressive Web Applications. 
 
 It took a while to learn all the components but the results were worth it!
 
@@ -62,7 +62,7 @@ Here is the list of technologies I've used in the project.
 
 ## 2- Getting Started
 
-To run this project locally, you need following to set up  setting up your project locally.
+To run this project locally, you need the following to set up setting up the project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### 2.1- Prerequisites
@@ -72,7 +72,7 @@ This is an example of how to list things you need to use the software and how to
 - Maven
 - Docker
   
-You don't need to download Postresql since my Dockerfile automatically configures it for you.
+You don't need to download Postgresql since my Dockerfile automatically configures it for you.
 
 ### 2.2- Installation
 
@@ -92,23 +92,23 @@ You don't need to download Postresql since my Dockerfile automatically configure
 ## 3- Features
 
 ### 3.1- Login / Register
-- User can login or register to our application. When they register their informations are saved into the database. When they login, their session is stored in the memory of the application with a randomized token.
-- Users are redirected automatically to login page when their token timeouts or their session is not found.
+- Users can log in or register to our application. When they register their information is saved into the database. When they log in, their session is stored in the memory of the application with a randomized token.
+- Users are redirected automatically to the login page when their token timeouts or their session is not found.
   
 <img src="img/login.png">
 
 ### 3.2- Home
 After login users are navigated to the Home Page. Here, they can see the posts of the people from the user's university. 
 
-Users can post announcements and delete their existing ones. Also they can like each others' posts.
+Users can post announcements and delete their existing ones. Also, they can like each others' posts.
 <img src="img/home1.png">
 
 
 <img src="img/home2.png">
 
 ### 3.3- Profile
-Each user has profile. In profile page you can see basic information about that person and their posts.
-You can edit your information by pressing edit profile button.
+Each user has a profile. On the profile page, you can see basic information about that person and their posts.
+You can edit your information by pressing the edit profile button.
 <img src="img/profile1.png">
 
 
@@ -118,7 +118,7 @@ You can edit your information by pressing edit profile button.
 <img src="img/profile3.png">
 
 ### 3.4- My Class
-Each graduated user can see posts spesific to their faculty. And also users can see people they graduated with. 
+Each graduated user can see posts specific to their faculty. And also users can see people they graduated with. 
 
 <img src="img/class.png">
 
