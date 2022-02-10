@@ -1,5 +1,7 @@
 package com.app.pages;
 
+import java.sql.Date;
+
 import com.app.model.User;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
@@ -12,11 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import lombok.extern.log4j.Log4j2;
 
-import java.sql.Date;
-
-@Log4j2
 public class EditProfile extends VerticalLayout {
     public EditProfile(User user, App parent) {
         Image pImage = new Image("https://tradingbeasts.com/wp-content/uploads/2019/05/avatar.jpg", "profile");

@@ -1,18 +1,17 @@
 package com.app.service;
 
-import com.app.config.DBConfig;
-import com.app.model.Announcement;
-import com.app.model.Job;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.atmosphere.config.service.Get;
-import org.springframework.stereotype.Service;
-
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+
+import com.app.config.DBConfig;
+import com.app.model.Job;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Service
 @AllArgsConstructor

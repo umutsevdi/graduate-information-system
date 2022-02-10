@@ -1,11 +1,11 @@
 package com.app.pages.components;
 
+import java.util.Optional;
+
 import com.app.model.Announcement;
 import com.app.model.User;
 import com.app.pages.App;
 import com.app.pages.UserView;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -19,14 +19,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import lombok.Getter;
 
-import java.util.Optional;
+import lombok.Getter;
 
 @Tag("ex-card")
 @JsModule("./src/components/ex-card.js")
 @Getter
-public class PostLayout extends VerticalLayout implements HasStyle, HasComponents {
+public class PostLayout extends VerticalLayout {
 
     public PostLayout(User owner, User user, Announcement announcement, App parent, Boolean badgesOn) {
         this.setAlignItems(Alignment.START);
@@ -49,8 +48,7 @@ public class PostLayout extends VerticalLayout implements HasStyle, HasComponent
         if (announcement.getLink() != null) {
             add(new Image(announcement.getLink(), announcement.getTitle()), new Paragraph());
         }
-        Button like = new Button("", click ->
-        {
+        Button like = new Button("", click -> {
             Optional<Integer> likes = parent.getAnnouncementService().toggleLike(user.getId(), announcement.getId());
             if (likes.isPresent()) {
                 click.getSource().setText((likes.get() > 0 ? likes.get() : likes.get() * -1) + "");

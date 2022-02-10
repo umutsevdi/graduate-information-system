@@ -15,14 +15,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @Route("profile")
 @AllArgsConstructor
 @PageTitle("User Profile | Graduate Information System")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
-@Log4j2
 public class MyClass extends VerticalLayout {
     public MyClass(User user, App parent) {
         HorizontalLayout userList = new HorizontalLayout();

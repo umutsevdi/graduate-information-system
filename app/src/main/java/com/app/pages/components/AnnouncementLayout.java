@@ -3,12 +3,9 @@ package com.app.pages.components;
 import com.app.model.Announcement;
 import com.app.model.User;
 import com.app.service.AnnouncementService;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -20,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 
 @Tag("ex-card")
 @JsModule("./src/components/ex-card.js")
-public class AnnouncementLayout extends VerticalLayout implements HasStyle, HasComponents {
+public class AnnouncementLayout extends VerticalLayout {
     public AnnouncementLayout(User user, AnnouncementService announcementService) {
 
         TextField title = new TextField("Title");

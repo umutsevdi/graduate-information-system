@@ -1,25 +1,24 @@
 package com.app.service;
 
-import com.app.config.DBConfig;
-import com.app.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
-
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.app.config.DBConfig;
+import com.app.model.User;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 @Service
 @AllArgsConstructor
 @Getter
 @ToString
-@Log4j2
 public class UserService {
     private DBConfig db;
 

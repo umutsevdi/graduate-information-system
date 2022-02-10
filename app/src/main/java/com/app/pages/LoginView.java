@@ -23,7 +23,6 @@ import com.vaadin.flow.server.VaadinSession;
 public class LoginView extends VerticalLayout {
     AuthenticationService authenticationService;
     UserService userService;
-    private int maxWidth;
 
     public LoginView(AuthenticationService authenticationService, UserService userService) {
         this.authenticationService = authenticationService;

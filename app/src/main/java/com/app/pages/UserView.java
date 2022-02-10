@@ -12,9 +12,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-@Log4j2
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class UserView extends VerticalLayout {
     public UserView(User searchedUser, User user, App parent) {
         Image pImage = new Image("https://tradingbeasts.com/wp-content/uploads/2019/05/avatar.jpg", "profile");
@@ -22,19 +25,19 @@ public class UserView extends VerticalLayout {
             pImage = new Image(searchedUser.getImagePath(), "");
         pImage.setMinHeight(128, Unit.PIXELS);
         add(pImage, new H3(searchedUser.getFirstName() + " " + searchedUser.getSecondName()),
-                new H5(searchedUser.getCompany() != null ? (searchedUser.getProfession() + " at " + searchedUser.getCompany()) : searchedUser.getProfession()));
+                new H5(searchedUser.getCompany() != null
+                        ? (searchedUser.getProfession() + " at " + searchedUser.getCompany())
+                        : searchedUser.getProfession()));
 
         Accordion personalInformation = new Accordion();
         personalInformation.add("Personal Information",
                 new VerticalLayout(
                         new Span(searchedUser.getFirstName() + " " + searchedUser.getSecondName()),
                         new HorizontalLayout(
-                                VaadinIcon.PHONE.create(), new Span(searchedUser.getPhone())
-                        ),
+                                VaadinIcon.PHONE.create(), new Span(searchedUser.getPhone())),
                         new HorizontalLayout(
-                                VaadinIcon.MAILBOX.create(), new Anchor(searchedUser.getMail(), searchedUser.getMail())
-                        )
-                ));
+                                VaadinIcon.MAILBOX.create(),
+                                new Anchor(searchedUser.getMail(), searchedUser.getMail()))));
         Accordion about = new Accordion();
         about.add("About", new Paragraph(searchedUser.getAbout()));
         add(personalInformation, about);
@@ -44,9 +47,9 @@ public class UserView extends VerticalLayout {
             add(cv);
         }
         if (searchedUser.getId().equals(user.getId())) {
-            add(new Button("Edit Profile", click -> {
-                parent.setContent(new EditProfile(user, parent));
-            }), new AnnouncementLayout(user, parent.getAnnouncementService()));
+            add(
+                    new Button("Edit Profile", click -> parent.setContent(new EditProfile(user, parent))),
+                    new AnnouncementLayout(user, parent.getAnnouncementService()));
         }
         VerticalLayout announcements = new VerticalLayout();
         try {
